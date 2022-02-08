@@ -202,6 +202,7 @@ module.exports = cls => class Reifier extends cls {
         children: [],
         package: c.package,
         hasInstallScript: c.hasInstallScript,
+        binPaths: [],
         package: c.package,
         location: c.location,
         path: c.path
@@ -295,7 +296,7 @@ module.exports = cls => class Reifier extends cls {
             fsChildren: [],
             isLink: true,
             isRoot: false,
-            package: { _id: 'abc', bundleDependencies: undefined, deprecated: undefined },
+            package: { _id: 'abc', bundleDependencies: undefined, deprecated: undefined, bin: target.package.bin },
             target
           }
         const newEdge1 = { optional: edge.optional, from, to: link }
