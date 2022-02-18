@@ -323,6 +323,8 @@ module.exports = cls => class Reifier extends cls {
 
   // public method
   async reify (options = {}) {
+    const isolated = options.isolated || false
+
     if (this[_packageLockOnly] && this[_global]) {
       const er = new Error('cannot generate lockfile for global packages')
       er.code = 'ESHRINKWRAPGLOBAL'
@@ -341,8 +343,10 @@ module.exports = cls => class Reifier extends cls {
     await this[_loadTrees](options)
 
     const old = this.idealTree
-    const isolatedTree = this[_createIsolatedTree](this.idealTree)
-    this.idealTree = isolatedTree
+    if (isolated) {
+      const isolatedTree = this[_createIsolatedTree](this.idealTree)
+      this.idealTree = isolatedTree
+    }
 
     await this[_diffTrees]()
 
