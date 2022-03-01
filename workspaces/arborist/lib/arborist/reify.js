@@ -171,7 +171,6 @@ module.exports = cls => class Reifier extends cls {
       copy('dev')
       copy('devOptional')
       copy('optional')
-      copy('path')
       copy('peer')
       copy('realpath')
       copy('resolved')
@@ -181,6 +180,7 @@ module.exports = cls => class Reifier extends cls {
       copy('name')
       copy('version')
       result.workspaceLocation = (tree.isWorkspace || tree.isProjectRoot) && tree.location
+      result.localPath = (tree.isWorkspace || tree.isProjectRoot) && tree.path
       result.id = tree.location
       result.target = tree.target && tmpProxyMemo(tree.target)
       result.parent= tree.parent && tmpProxyMemo(tree.parent)
@@ -247,8 +247,8 @@ module.exports = cls => class Reifier extends cls {
       hasShrinkwrap: false,
       parent: null,
       isTop: true,
-      path: proxiedIdealTree.root.path,
-      realpath: proxiedIdealTree.root.path,
+      path: proxiedIdealTree.root.localPath,
+      realpath: proxiedIdealTree.root.localPath,
       meta: { loadedFromDisk: false },
       global: false,
       isProjectRoot: true,
@@ -265,7 +265,7 @@ module.exports = cls => class Reifier extends cls {
         binPaths: [],
         package: c.package,
         location: c.workspaceLocation,
-        path: c.path
+        path: c.localPath
       }
       t.fsChildren.push(workspace)
       t.inventory.set(workspace.location, workspace)
@@ -285,7 +285,7 @@ module.exports = cls => class Reifier extends cls {
             location,
             name: c.name,
             optional: c.optional,
-            top: { path: proxiedIdealTree.root.path },
+            top: { path: proxiedIdealTree.root.localPath },
             children: [],
             edgesIn: new Set(),
             edgesOut: new Map(),
@@ -297,8 +297,8 @@ module.exports = cls => class Reifier extends cls {
             integrity: null,
             isLink: false,
             isRoot: false,
-            path: `${proxiedIdealTree.root.path}/${location}`,
-            realpath: `${proxiedIdealTree.root.path}/${location}`,
+            path: `${proxiedIdealTree.root.localPath}/${location}`,
+            realpath: `${proxiedIdealTree.root.localPath}/${location}`,
             resolved: c.resolved,
             package: c.package,
           }
@@ -347,11 +347,11 @@ module.exports = cls => class Reifier extends cls {
             isTop: false,
             optional: edge.optional,
             location: `${node_modules_folder}/${to.name}`,
-            path: `${proxiedIdealTree.root.path}/${node_modules_folder}/${to.name}`,
+            path: `${proxiedIdealTree.root.localPath}/${node_modules_folder}/${to.name}`,
             realpath: target.path,
             name: toKey,
             resolved:toKey,
-            top: { path: proxiedIdealTree.root.path },
+            top: { path: proxiedIdealTree.root.localPath },
             children: [],
             fsChildren: [],
             isLink: true,
