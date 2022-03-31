@@ -5,17 +5,24 @@ const { join, resolve } = require('path')
 const t = require('tap')
 const rimraf = promisify(require('rimraf'))
 
+const cwd = process.cwd()
+const npmDir = resolve(__dirname, '..', process.env.SMOKE_TEST_NPM_PACKAGE || '')
+
 const normalizePath = path => path.replace(/[A-Z]:/, '').replace(/\\/g, '/')
-const cwd = normalizePath(process.cwd())
+
 t.cleanSnapshot = s =>
   s
-    .split(cwd)
+    .split(normalizePath(npmDir))
+    .join('{CWD}')
+    .split(normalizePath(cwd))
     .join('{CWD}')
     .split(registry)
     .join('https://registry.npmjs.org/')
     .split(normalizePath(process.execPath))
     .join('node')
-    .split(process.cwd())
+    .split(npmDir)
+    .join('{CWD}')
+    .split(cwd)
     .join('{CWD}')
     .replace(/\\+/g, '/')
     .replace(/\r\n/g, '\n')
@@ -37,7 +44,7 @@ const path = t.testdir({
 })
 const localPrefix = resolve(path, 'project')
 const userconfigLocation = resolve(path, '.npmrc')
-const npmLocation = resolve(__dirname, '../bin/npm-cli.js')
+const npmLocation = join(npmDir, 'bin', 'npm-cli.js')
 const cacheLocation = resolve(path, 'cache')
 const binLocation = resolve(path, 'bin')
 const env = {
@@ -55,7 +62,7 @@ const npmOpts = [
 const npmBin = `"${process.execPath}" "${npmLocation}" ${npmOpts}`
 const exec = async cmd => {
   const res = await execAsync(cmd, { cwd: localPrefix, env })
-  if (res.stderr) {
+  if (res.stderr && process.env.CI) {
     console.error(res.stderr)
   }
   return String(res.stdout)
