@@ -6,7 +6,7 @@ const t = require('tap')
 const rimraf = promisify(require('rimraf'))
 
 const cwd = process.cwd()
-const npmDir = resolve(__dirname, '..', process.env.SMOKE_TEST_NPM_PACKAGE || '')
+const npmDir = process.env.SMOKE_TEST_NPM_PACKAGE || resolve(cwd, '..')
 
 const normalizePath = path => path.replace(/[A-Z]:/, '').replace(/\\/g, '/')
 
@@ -31,7 +31,7 @@ t.cleanSnapshot = s =>
     .replace(/^.*debug-[0-9]+.log$/gm, '')
 
 // setup server
-const { start, stop, registry } = require('./server.js')
+const { start, stop, registry } = require('../lib/server.js')
 t.before(start)
 t.teardown(stop)
 
@@ -342,7 +342,7 @@ t.test('npm ci', async t => {
   await exec(`${npmBin} pkg set "dependencies.abbrev=^1.1.1"`)
 
   try {
-    const npmOpts = [
+    const npmCiOpts = [
       `--registry=${registry}`,
       `--cache="${cacheLocation}"`,
       `--userconfig="${userconfigLocation}"`,
@@ -350,8 +350,8 @@ t.test('npm ci', async t => {
       '--no-update-notifier',
       '--loglevel=error',
     ].join(' ')
-    const npmBin = `"${process.execPath}" "${npmLocation}" ${npmOpts}`
-    await exec(`${npmBin} ci`)
+    const npmCiBin = `"${process.execPath}" "${npmLocation}" ${npmCiOpts}`
+    await exec(`${npmCiBin} ci`)
   } catch (err) {
     t.matchSnapshot(err.stderr, 'should throw mismatch deps in lock file error')
   }

@@ -15,7 +15,7 @@ let advisoryBulkResponse = null
 let failAdvisoryBulk = false
 let auditResponse = null
 let failAudit = false
-const startServer = () => new Promise((res, rej) => {
+const startServer = () => new Promise((resolve) => {
   const server = exports.server = http.createServer((req, res) => {
     res.setHeader('connection', 'close')
 
@@ -84,7 +84,7 @@ const startServer = () => new Promise((res, rej) => {
               opts.headers.host = opts.host
               opts.path = '/v1/advisories/bulk'
               https.request(opts)
-                .on('response', upstream => handleUpstream(upstream))
+                .on('response', u => handleUpstream(u))
                 .end(Buffer.concat(body))
             } else {
               handleUpstream(upstream)
@@ -150,7 +150,7 @@ const startServer = () => new Promise((res, rej) => {
       return
     }
 
-    const f = join(__dirname, 'content', join('/', req.url.replace(/@/, '').replace(/%2f/i, '/')))
+    const f = join(__dirname, join('/', req.url.replace(/@/, '').replace(/%2f/i, '/')))
     // a magic package that causes us to return an error that will be logged
     if (basename(f) === 'fail_reflect_user_agent') {
       res.setHeader('npm-notice', req.headers['user-agent'])
@@ -202,9 +202,9 @@ const startServer = () => new Promise((res, rej) => {
 
           const ct = upstream.headers['content-type']
           const isJson = ct.includes('application/json')
-          const file = isJson ? f + '.json' : f
-          console.error('PROXY', `${req.url} -> ${file} ${ct}`)
-          mkdirp.sync(dirname(file))
+          const uFile = isJson ? f + '.json' : f
+          console.error('PROXY', `${req.url} -> ${uFile} ${ct}`)
+          mkdirp.sync(dirname(uFile))
           const data = []
           res.statusCode = upstream.statusCode
           res.setHeader('content-type', ct)
@@ -214,13 +214,13 @@ const startServer = () => new Promise((res, rej) => {
             if (!errorStatus) {
               if (isJson) {
                 const obj = JSON.parse(out.toString())
-                writeFileSync(file, JSON.stringify(obj, 0, 2) + '\n')
+                writeFileSync(uFile, JSON.stringify(obj, 0, 2) + '\n')
                 const mrm = require('minify-registry-metadata')
-                const minFile = file.replace(/\.json$/, '.min.json')
+                const minFile = uFile.replace(/\.json$/, '.min.json')
                 writeFileSync(minFile, JSON.stringify(mrm(obj), 0, 2) + '\n')
-                console.error('WROTE JSONS', [file, minFile])
+                console.error('WROTE JSONS', [uFile, minFile])
               } else {
-                writeFileSync(file, out)
+                writeFileSync(uFile, out)
               }
             }
             res.end(out)
@@ -237,7 +237,7 @@ const startServer = () => new Promise((res, rej) => {
       res.end(er.stack)
     }
   })
-  server.listen(PORT, res)
+  server.listen(PORT, resolve)
 })
 
 exports.auditResponse = value => {
