@@ -140,6 +140,14 @@ class MockRegistry {
     })
   }
 
+  listTokens ( { tokens }) {
+    this.nock = this.nock.get('/-/npm/v1/tokens').reply(200, { objects: tokens, urls: {} })
+  }
+
+  removeToken ( { key } ) {
+    this.nock = this.nock.delete(`/-/npm/v1/tokens/token/${key}`).reply(200, null)
+  }
+
   // team can be a team or a username
   lsPackages ({ team, packages = {}, times = 1 }) {
     if (team.startsWith('@')) {
