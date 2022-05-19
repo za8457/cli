@@ -22,7 +22,7 @@ t.skip('npm set', async t => {
     // This will write to ~/.npmrc!
     // Don't unskip until we can write to project level
     await npm.exec('set', ['test-config-item=test config value'])
-    t.equal(joinedOutput(), '', 'outputs nothing')
+    t.equal(joinedOutput, '', 'outputs nothing')
     t.equal(
       npm.config.get('test-config-item', 'project'),
       'test config value',

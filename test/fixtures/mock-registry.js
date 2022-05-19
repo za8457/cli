@@ -140,11 +140,11 @@ class MockRegistry {
     })
   }
 
-  listTokens ( { tokens }) {
+  listTokens ({ tokens }) {
     this.nock = this.nock.get('/-/npm/v1/tokens').reply(200, { objects: tokens, urls: {} })
   }
 
-  removeToken ( { key } ) {
+  removeToken ({ key }) {
     this.nock = this.nock.delete(`/-/npm/v1/tokens/token/${key}`).reply(200, null)
   }
 

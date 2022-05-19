@@ -96,7 +96,7 @@ t.test('undeprecate', async t => {
   }).reply(200, {})
 
   await npm.exec('deprecate', ['foo', ''])
-  t.match(joinedOutput(), '')
+  t.match(joinedOutput, '')
 })
 
 t.test('deprecates given range', async t => {
@@ -122,7 +122,7 @@ t.test('deprecates given range', async t => {
     return body.versions['1.0.0'].deprecated === message
   }).reply(200, {})
   await npm.exec('deprecate', ['foo@1.0.0', message])
-  t.match(joinedOutput(), '')
+  t.match(joinedOutput, '')
 })
 
 t.test('deprecates all versions when no range is specified', async t => {
@@ -148,5 +148,5 @@ t.test('deprecates all versions when no range is specified', async t => {
   }).reply(200, {})
 
   await npm.exec('deprecate', ['foo', message])
-  t.match(joinedOutput(), '')
+  t.match(joinedOutput, '')
 })

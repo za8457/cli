@@ -22,7 +22,7 @@ t.test('search <name> text', async t => {
 
   registry.search({ results: libnpmsearchResultFixture })
   await npm.exec('search', ['libnpm'])
-  t.matchSnapshot(joinedOutput(), 'should have expected search results')
+  t.matchSnapshot(joinedOutput, 'should have expected search results')
 })
 
 t.test('search <name> --json', async t => {
@@ -37,7 +37,7 @@ t.test('search <name> --json', async t => {
   await npm.exec('search', ['libnpm'])
 
   t.same(
-    JSON.parse(joinedOutput()),
+    JSON.parse(joinedOutput),
     libnpmsearchResultFixture,
     'should have expected search results as json'
   )
@@ -52,7 +52,7 @@ t.test('search <name> --parseable', async t => {
 
   registry.search({ results: libnpmsearchResultFixture })
   await npm.exec('search', ['libnpm'])
-  t.matchSnapshot(joinedOutput(), 'should have expected search results as parseable')
+  t.matchSnapshot(joinedOutput, 'should have expected search results as parseable')
 })
 
 t.test('search <name> --color', async t => {
@@ -64,7 +64,7 @@ t.test('search <name> --color', async t => {
 
   registry.search({ results: libnpmsearchResultFixture })
   await npm.exec('search', ['libnpm'])
-  t.matchSnapshot(joinedOutput(), 'should have expected search results with color')
+  t.matchSnapshot(joinedOutput, 'should have expected search results with color')
 })
 
 t.test('search /<name>/--color', async t => {
@@ -76,7 +76,7 @@ t.test('search /<name>/--color', async t => {
 
   registry.search({ results: libnpmsearchResultFixture })
   await npm.exec('search', ['/libnpm/'])
-  t.matchSnapshot(joinedOutput(), 'should have expected search results with color')
+  t.matchSnapshot(joinedOutput, 'should have expected search results with color')
 })
 
 t.test('search <name>', async t => {
@@ -114,7 +114,7 @@ t.test('search <name>', async t => {
 
   await npm.exec('search', ['foo'])
 
-  t.matchSnapshot(joinedOutput(), 'should have filtered expected search results')
+  t.matchSnapshot(joinedOutput, 'should have filtered expected search results')
 })
 
 t.test('empty search results', async t => {
@@ -127,7 +127,7 @@ t.test('empty search results', async t => {
   registry.search({ results: [] })
   await npm.exec('search', ['foo'])
 
-  t.matchSnapshot(joinedOutput(), 'should have expected search results')
+  t.matchSnapshot(joinedOutput, 'should have expected search results')
 })
 
 t.test('empty search results --json', async t => {
@@ -140,7 +140,7 @@ t.test('empty search results --json', async t => {
   registry.search({ results: [] })
 
   await npm.exec('search', ['foo'])
-  t.equal(joinedOutput(), '\n[]\n', 'should have expected empty square brackets')
+  t.equal(joinedOutput, '\n[]\n', 'should have expected empty square brackets')
 })
 
 t.test('search api response error', async t => {
@@ -169,7 +169,7 @@ t.test('search exclude string', async t => {
 
   registry.search({ results: libnpmsearchResultFixture })
   await npm.exec('search', ['libnpm'])
-  t.matchSnapshot(joinedOutput(), 'results should not have libnpmversion')
+  t.matchSnapshot(joinedOutput, 'results should not have libnpmversion')
 })
 
 t.test('search exclude username with upper case letters', async t => {
@@ -181,7 +181,7 @@ t.test('search exclude username with upper case letters', async t => {
 
   registry.search({ results: libnpmsearchResultFixture })
   await npm.exec('search', ['libnpm'])
-  t.matchSnapshot(joinedOutput(), 'results should not have nlf')
+  t.matchSnapshot(joinedOutput, 'results should not have nlf')
 })
 
 t.test('search exclude regex', async t => {
@@ -193,7 +193,7 @@ t.test('search exclude regex', async t => {
 
   registry.search({ results: libnpmsearchResultFixture })
   await npm.exec('search', ['libnpm'])
-  t.matchSnapshot(joinedOutput(), 'results should not have libnpmversion')
+  t.matchSnapshot(joinedOutput, 'results should not have libnpmversion')
 })
 
 t.test('search exclude forward slash', async t => {
@@ -205,5 +205,5 @@ t.test('search exclude forward slash', async t => {
 
   registry.search({ results: libnpmsearchResultFixture })
   await npm.exec('search', ['libnpm'])
-  t.matchSnapshot(joinedOutput(), 'results should not have libnpmversion')
+  t.matchSnapshot(joinedOutput, 'results should not have libnpmversion')
 })

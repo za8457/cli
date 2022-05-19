@@ -32,7 +32,7 @@ t.test('unstar a package unicode:false', async t => {
 
   await npm.exec('unstar', [pkgName])
   t.equal(
-    joinedOutput(),
+    joinedOutput,
     '( ) @npmcli/test-package',
     'should output unstarred package msg'
   )
@@ -55,7 +55,7 @@ t.test('unstar a package unicode:true', async t => {
 
   await npm.exec('unstar', [pkgName])
   t.equal(
-    joinedOutput(),
+    joinedOutput,
     '☆  @npmcli/test-package',
     'should output unstarred package msg'
   )

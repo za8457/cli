@@ -76,7 +76,7 @@ t.test('owner ls no args', async t => {
   await registry.package({ manifest })
 
   await npm.exec('owner', ['ls'])
-  t.match(joinedOutput(), maintainers.map(m => `${m.name} <${m.email}>`).join('\n'))
+  t.match(joinedOutput, maintainers.map(m => `${m.name} <${m.email}>`).join('\n'))
 })
 
 t.test('local package.json has no name', async t => {
@@ -140,7 +140,7 @@ t.test('owner ls <pkg>', async t => {
   await registry.package({ manifest })
 
   await npm.exec('owner', ['ls', packageName])
-  t.match(joinedOutput(), maintainers.map(m => `${m.name} <${m.email}>`).join('\n'))
+  t.match(joinedOutput, maintainers.map(m => `${m.name} <${m.email}>`).join('\n'))
 })
 
 t.test('owner ls <pkg> no maintainers', async t => {
@@ -156,7 +156,7 @@ t.test('owner ls <pkg> no maintainers', async t => {
   await registry.package({ manifest })
 
   await npm.exec('owner', ['ls', packageName])
-  t.equal(joinedOutput(), 'no admin found')
+  t.equal(joinedOutput, 'no admin found')
 })
 
 t.test('owner add <user> <pkg>', async t => {
@@ -186,7 +186,7 @@ t.test('owner add <user> <pkg>', async t => {
     return true
   }).reply(200, {})
   await npm.exec('owner', ['add', username, packageName])
-  t.equal(joinedOutput(), `+ ${username} (${packageName})`)
+  t.equal(joinedOutput, `+ ${username} (${packageName})`)
 })
 
 t.test('owner add <user> cwd package', async t => {
@@ -219,7 +219,7 @@ t.test('owner add <user> cwd package', async t => {
     return true
   }).reply(200, {})
   await npm.exec('owner', ['add', username])
-  t.equal(joinedOutput(), `+ ${username} (${packageName})`)
+  t.equal(joinedOutput, `+ ${username} (${packageName})`)
 })
 
 t.test('owner add <user> <pkg> already an owner', async t => {
@@ -238,7 +238,7 @@ t.test('owner add <user> <pkg> already an owner', async t => {
   registry.couchuser({ username })
   await registry.package({ manifest })
   await npm.exec('owner', ['add', username, packageName])
-  t.equal(joinedOutput(), '')
+  t.equal(joinedOutput, '')
   t.match(
     logs.info,
     [['owner add', 'Already a package owner: test-user-a <test-user-a@npmjs.org>']]
@@ -305,7 +305,7 @@ t.test('owner add <user> <pkg> no previous maintainers property from server', as
     return true
   }).reply(200, {})
   await npm.exec('owner', ['add', username, packageName])
-  t.equal(joinedOutput(), `+ ${username} (${packageName})`)
+  t.equal(joinedOutput, `+ ${username} (${packageName})`)
 })
 
 t.test('owner add no user', async t => {
@@ -361,7 +361,7 @@ t.test('owner rm <user> <pkg>', async t => {
     return true
   }).reply(200, {})
   await npm.exec('owner', ['rm', username, packageName])
-  t.equal(joinedOutput(), `- ${username} (${packageName})`)
+  t.equal(joinedOutput, `- ${username} (${packageName})`)
 })
 
 t.test('owner rm <user> <pkg> not a current owner', async t => {
@@ -410,7 +410,7 @@ t.test('owner rm <user> cwd package', async t => {
     return true
   }).reply(200, {})
   await npm.exec('owner', ['rm', username])
-  t.equal(joinedOutput(), `- ${username} (${packageName})`)
+  t.equal(joinedOutput, `- ${username} (${packageName})`)
 })
 
 t.test('owner rm <user> only user', async t => {
@@ -488,7 +488,7 @@ t.test('workspaces', async t => {
     })
     await registryPackage(t, npm.config.get('registry'), 'workspace-a')
     await npm.exec('owner', ['ls'])
-    t.match(joinedOutput(), maintainers.map(m => `${m.name} <${m.email}>`).join('\n'))
+    t.match(joinedOutput, maintainers.map(m => `${m.name} <${m.email}>`).join('\n'))
   })
 
   t.test('owner ls explicit workspace', async t => {
@@ -501,7 +501,7 @@ t.test('workspaces', async t => {
     npm.config.set('workspace', ['workspace-a'])
     await registryPackage(t, npm.config.get('registry'), 'workspace-a')
     await npm.exec('owner', ['ls'])
-    t.match(joinedOutput(), maintainers.map(m => `${m.name} <${m.email}>`).join('\n'))
+    t.match(joinedOutput, maintainers.map(m => `${m.name} <${m.email}>`).join('\n'))
   })
 
   t.test('owner ls <pkg> implicit workspace', async t => {
@@ -513,7 +513,7 @@ t.test('workspaces', async t => {
     })
     await registryPackage(t, npm.config.get('registry'), packageName)
     await npm.exec('owner', ['ls', packageName])
-    t.match(joinedOutput(), maintainers.map(m => `${m.name} <${m.email}>`).join('\n'))
+    t.match(joinedOutput, maintainers.map(m => `${m.name} <${m.email}>`).join('\n'))
   })
 
   t.test('owner ls <pkg> explicit workspace', async t => {
@@ -526,7 +526,7 @@ t.test('workspaces', async t => {
     npm.config.set('workspace', ['workspace-a'])
     await registryPackage(t, npm.config.get('registry'), packageName)
     await npm.exec('owner', ['ls', packageName])
-    t.match(joinedOutput(), maintainers.map(m => `${m.name} <${m.email}>`).join('\n'))
+    t.match(joinedOutput, maintainers.map(m => `${m.name} <${m.email}>`).join('\n'))
   })
 
   t.test('owner add implicit workspace', async t => {
@@ -557,7 +557,7 @@ t.test('workspaces', async t => {
       return true
     }).reply(200, {})
     await npm.exec('owner', ['add', username])
-    t.equal(joinedOutput(), `+ ${username} (workspace-a)`)
+    t.equal(joinedOutput, `+ ${username} (workspace-a)`)
   })
 
   t.test('owner add --workspace', async t => {
@@ -586,7 +586,7 @@ t.test('workspaces', async t => {
       return true
     }).reply(200, {})
     await npm.exec('owner', ['add', username])
-    t.equal(joinedOutput(), `+ ${username} (workspace-a)`)
+    t.equal(joinedOutput, `+ ${username} (workspace-a)`)
   })
 
   t.test('owner rm --workspace', async t => {
@@ -614,7 +614,7 @@ t.test('workspaces', async t => {
       return true
     }).reply(200, {})
     await npm.exec('owner', ['rm', username])
-    t.equal(joinedOutput(), `- ${username} (workspace-a)`)
+    t.equal(joinedOutput, `- ${username} (workspace-a)`)
   })
 })
 

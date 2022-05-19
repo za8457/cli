@@ -94,7 +94,7 @@ t.test('access public on scoped package', async t => {
   })
   registry.access({ spec: name, access: 'public' })
   await npm.exec('access', ['public'])
-  t.equal(joinedOutput(), '')
+  t.equal(joinedOutput, '')
 })
 
 t.test('access public on missing package.json', async t => {
@@ -152,7 +152,7 @@ t.test('access restricted on scoped package', async t => {
   })
   registry.access({ spec: name, access: 'restricted' })
   await npm.exec('access', ['restricted'])
-  t.equal(joinedOutput(), '')
+  t.equal(joinedOutput, '')
 })
 
 t.test('access restricted on missing package.json', async t => {
@@ -191,7 +191,7 @@ t.test('access grant read-only', async t => {
   })
   registry.grant({ spec: '@scoped/another', team: 'myorg:myteam', permissions: 'read-only' })
   await npm.exec('access', ['grant', 'read-only', 'myorg:myteam', '@scoped/another'])
-  t.equal(joinedOutput(), '')
+  t.equal(joinedOutput, '')
 })
 
 t.test('access grant read-write', async t => {
@@ -207,7 +207,7 @@ t.test('access grant read-write', async t => {
   })
   registry.grant({ spec: '@scoped/another', team: 'myorg:myteam', permissions: 'read-write' })
   await npm.exec('access', ['grant', 'read-write', 'myorg:myteam', '@scoped/another'])
-  t.equal(joinedOutput(), '')
+  t.equal(joinedOutput, '')
 })
 
 t.test('access grant current cwd', async t => {
@@ -228,7 +228,7 @@ t.test('access grant current cwd', async t => {
   })
   registry.grant({ spec: 'yargs', team: 'myorg:myteam', permissions: 'read-write' })
   await npm.exec('access', ['grant', 'read-write', 'myorg:myteam'])
-  t.equal(joinedOutput(), '')
+  t.equal(joinedOutput, '')
 })
 
 t.test('access grant others', async t => {
@@ -286,7 +286,7 @@ t.test('access 2fa-required', async t => {
   })
   registry.access({ spec: '@scope/pkg', publishRequires2fa: true })
   await npm.exec('access', ['2fa-required', '@scope/pkg'])
-  t.equal(joinedOutput(), '')
+  t.equal(joinedOutput, '')
 })
 
 t.test('access 2fa-not-required', async t => {
@@ -302,7 +302,7 @@ t.test('access 2fa-not-required', async t => {
   })
   registry.access({ spec: '@scope/pkg', publishRequires2fa: false })
   await npm.exec('access', ['2fa-not-required', '@scope/pkg'])
-  t.equal(joinedOutput(), '')
+  t.equal(joinedOutput, '')
 })
 
 t.test('access revoke', async t => {
@@ -318,7 +318,7 @@ t.test('access revoke', async t => {
   })
   registry.revoke({ spec: '@scoped/another', team: 'myorg:myteam' })
   await npm.exec('access', ['revoke', 'myorg:myteam', '@scoped/another'])
-  t.equal(joinedOutput(), '')
+  t.equal(joinedOutput, '')
 })
 
 t.test('access revoke missing team args', async t => {
@@ -363,7 +363,7 @@ t.test('npm access ls-packages with no team', async t => {
   registry.whoami({ username: team })
   registry.lsPackages({ team, packages })
   await npm.exec('access', ['ls-packages'])
-  t.match(JSON.parse(joinedOutput()), packages)
+  t.match(JSON.parse(joinedOutput), packages)
 })
 
 t.test('access ls-packages on team', async t => {
@@ -381,7 +381,7 @@ t.test('access ls-packages on team', async t => {
   const packages = { 'test-package': 'read-write' }
   registry.lsPackages({ team, packages })
   await npm.exec('access', ['ls-packages', 'myorg:myteam'])
-  t.match(JSON.parse(joinedOutput()), packages)
+  t.match(JSON.parse(joinedOutput), packages)
 })
 
 t.test('access ls-collaborators on current', async t => {
@@ -403,7 +403,7 @@ t.test('access ls-collaborators on current', async t => {
   const collaborators = { 'test-user': 'read-write' }
   registry.lsCollaborators({ spec: 'yargs', collaborators })
   await npm.exec('access', ['ls-collaborators'])
-  t.match(JSON.parse(joinedOutput()), collaborators)
+  t.match(JSON.parse(joinedOutput), collaborators)
 })
 
 t.test('access ls-collaborators on spec', async t => {
@@ -420,5 +420,5 @@ t.test('access ls-collaborators on spec', async t => {
   const collaborators = { 'test-user': 'read-write' }
   registry.lsCollaborators({ spec: 'yargs', collaborators })
   await npm.exec('access', ['ls-collaborators', 'yargs'])
-  t.match(JSON.parse(joinedOutput()), collaborators)
+  t.match(JSON.parse(joinedOutput), collaborators)
 })

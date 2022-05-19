@@ -93,7 +93,7 @@ t.test('all clear', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await npm.exec('doctor', [])
-  t.matchSnapshot(joinedOutput(), 'output')
+  t.matchSnapshot(joinedOutput, 'output')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -110,7 +110,7 @@ t.test('all clear in color', async t => {
     .get('/dist/index.json').reply(200, nodeVersions)
   npm.config.set('color', 'always')
   await npm.exec('doctor', [])
-  t.matchSnapshot(joinedOutput(), 'everything is ok in color')
+  t.matchSnapshot(joinedOutput, 'everything is ok in color')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -129,7 +129,7 @@ t.test('silent', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await npm.exec('doctor', [])
-  t.matchSnapshot(joinedOutput(), 'output')
+  t.matchSnapshot(joinedOutput, 'output')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -145,7 +145,7 @@ t.test('ping 404', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'ping 404')
+  t.matchSnapshot(joinedOutput, 'ping 404')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -162,7 +162,7 @@ t.test('ping 404 in color', async t => {
     .get('/dist/index.json').reply(200, nodeVersions)
   npm.config.set('color', 'always')
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'ping 404 in color')
+  t.matchSnapshot(joinedOutput, 'ping 404 in color')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -178,7 +178,7 @@ t.test('ping exception with code', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'ping failure')
+  t.matchSnapshot(joinedOutput, 'ping failure')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -194,7 +194,7 @@ t.test('ping exception without code', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'ping failure')
+  t.matchSnapshot(joinedOutput, 'ping failure')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -210,7 +210,7 @@ t.test('npm out of date', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'npm is out of date')
+  t.matchSnapshot(joinedOutput, 'npm is out of date')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -232,7 +232,7 @@ t.test('node out of date - lts', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'node is out of date')
+  t.matchSnapshot(joinedOutput, 'node is out of date')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -254,7 +254,7 @@ t.test('node out of date - current', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'node is out of date')
+  t.matchSnapshot(joinedOutput, 'node is out of date')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -271,7 +271,7 @@ t.test('non-default registry', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'non default registry')
+  t.matchSnapshot(joinedOutput, 'non default registry')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -292,7 +292,7 @@ t.test('missing git', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'missing git')
+  t.matchSnapshot(joinedOutput, 'missing git')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -315,7 +315,7 @@ t.test('windows skips permissions checks', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await npm.exec('doctor', [])
-  t.matchSnapshot(joinedOutput(), 'no permissions checks')
+  t.matchSnapshot(joinedOutput, 'no permissions checks')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -331,7 +331,7 @@ t.test('missing global directories', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'missing global directories')
+  t.matchSnapshot(joinedOutput, 'missing global directories')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -347,7 +347,7 @@ t.test('missing local node_modules', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await npm.exec('doctor', [])
-  t.matchSnapshot(joinedOutput(), 'missing local node_modules')
+  t.matchSnapshot(joinedOutput, 'missing local node_modules')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -376,7 +376,7 @@ t.test('incorrect owner', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'incorrect owner')
+  t.matchSnapshot(joinedOutput, 'incorrect owner')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -400,7 +400,7 @@ t.test('incorrect permissions', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'incorrect owner')
+  t.matchSnapshot(joinedOutput, 'incorrect owner')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -424,7 +424,7 @@ t.test('error reading directory', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'readdir error')
+  t.matchSnapshot(joinedOutput, 'readdir error')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -447,7 +447,7 @@ t.test('cacache badContent', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await npm.exec('doctor', [])
-  t.matchSnapshot(joinedOutput(), 'corrupted cache content')
+  t.matchSnapshot(joinedOutput, 'corrupted cache content')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -470,7 +470,7 @@ t.test('cacache reclaimedCount', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await npm.exec('doctor', [])
-  t.matchSnapshot(joinedOutput(), 'content garbage collected')
+  t.matchSnapshot(joinedOutput, 'content garbage collected')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -493,7 +493,7 @@ t.test('cacache missingContent', async t => {
   tnock(t, 'https://nodejs.org')
     .get('/dist/index.json').reply(200, nodeVersions)
   await npm.exec('doctor', [])
-  t.matchSnapshot(joinedOutput(), 'missing content')
+  t.matchSnapshot(joinedOutput, 'missing content')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })
 
@@ -507,6 +507,6 @@ t.test('bad proxy', async t => {
     ...dirs,
   })
   await t.rejects(npm.exec('doctor', []))
-  t.matchSnapshot(joinedOutput(), 'output')
+  t.matchSnapshot(joinedOutput, 'output')
   t.matchSnapshot({ info: logs.info, warn: logs.warn, error: logs.error }, 'logs')
 })

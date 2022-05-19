@@ -81,7 +81,7 @@ t.test('dedupe', async (t) => {
     },
   })
   await npm.exec('dedupe', [])
-  t.match(joinedOutput(), /added 1 package, and removed 2 packages/)
+  t.match(joinedOutput, /added 1 package, and removed 2 packages/)
   t.ok(
     fs.existsSync(path.join(npm.prefix, 'node_modules', 'test-sub')),
     'test-sub was hoisted'

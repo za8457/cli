@@ -5,7 +5,7 @@ t.test('prefix', async (t) => {
   const { joinedOutput, npm } = await loadMockNpm(t, { load: false })
   await npm.exec('root', [])
   t.equal(
-    joinedOutput(),
+    joinedOutput,
     npm.dir,
     'outputs npm.dir'
   )

@@ -14,7 +14,7 @@ t.test('npm whoami', async (t) => {
   })
   registry.whoami({ username })
   await npm.exec('whoami', [])
-  t.equal(joinedOutput(), username, 'should print username')
+  t.equal(joinedOutput, username, 'should print username')
 })
 
 t.test('npm whoami --json', async (t) => {
@@ -31,5 +31,5 @@ t.test('npm whoami --json', async (t) => {
   })
   registry.whoami({ username })
   await npm.exec('whoami', [])
-  t.equal(JSON.parse(joinedOutput()), username, 'should print username')
+  t.equal(JSON.parse(joinedOutput), username, 'should print username')
 })

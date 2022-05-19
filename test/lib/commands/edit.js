@@ -49,7 +49,7 @@ t.test('npm edit', async t => {
     { cwd: semverPath }
   )
   await npm.exec('edit', ['semver'])
-  t.match(joinedOutput(), 'rebuilt dependencies successfully')
+  t.match(joinedOutput, 'rebuilt dependencies successfully')
 })
 
 t.test('rebuild failure', async t => {

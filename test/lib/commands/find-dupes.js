@@ -69,7 +69,7 @@ t.test('should run dedupe in dryRun mode', async (t) => {
 
   await registry.package({ manifest: manifestSub })
   await npm.exec('find-dupes', [])
-  t.match(joinedOutput(), /added 1 package, and removed 2 packages/)
+  t.match(joinedOutput, /added 1 package, and removed 2 packages/)
   t.notOk(
     fs.existsSync(path.join(npm.prefix, 'node_modules', 'test-sub')),
     'test-sub was not hoisted'

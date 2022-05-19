@@ -78,7 +78,7 @@ t.test('respects publishConfig.registry, runs appropriate scripts', async t => {
     })
   }).reply(200, {})
   await npm.exec('publish', [])
-  t.matchSnapshot(joinedOutput(), 'new package version')
+  t.matchSnapshot(joinedOutput, 'new package version')
   t.resolveMatch(fs.exists(path.join(prefix, 'scripts-prepublishonly')), true, 'ran prepublishOnly')
   t.resolveMatch(
     fs.exists(path.join(prefix, 'scripts-prepublish')),
@@ -141,7 +141,7 @@ t.test('re-loads publishConfig.registry if added during script process', async t
     })
   }).reply(200, {})
   await npm.exec('publish', [])
-  t.matchSnapshot(joinedOutput(), 'new package version')
+  t.matchSnapshot(joinedOutput, 'new package version')
 })
 
 t.test('json', async t => {
@@ -165,7 +165,7 @@ t.test('json', async t => {
   registry.nock.put(`/${pkg}`).reply(200, {})
   await npm.exec('publish', [])
   t.matchSnapshot(logs.notice)
-  t.matchSnapshot(joinedOutput(), 'new package json')
+  t.matchSnapshot(joinedOutput, 'new package json')
 })
 
 t.test('dry-run', async t => {
@@ -182,7 +182,7 @@ t.test('dry-run', async t => {
     }),
   })
   await npm.exec('publish', [])
-  t.equal(joinedOutput(), `+ ${pkg}@1.0.0`)
+  t.equal(joinedOutput, `+ ${pkg}@1.0.0`)
   t.matchSnapshot(logs.notice)
 })
 
@@ -242,7 +242,7 @@ t.test('tarball', async t => {
   }).reply(200, {})
   await npm.exec('publish', [tarFilename])
   t.matchSnapshot(logs.notice)
-  t.matchSnapshot(joinedOutput(), 'new package json')
+  t.matchSnapshot(joinedOutput, 'new package json')
 })
 
 t.test('no auth default registry', async t => {
@@ -276,7 +276,7 @@ t.test('no auth dry-run', async t => {
     }),
   })
   await npm.exec('publish', [])
-  t.matchSnapshot(joinedOutput())
+  t.matchSnapshot(joinedOutput)
   t.matchSnapshot(logs.warn, 'warns about auth being needed')
 })
 
@@ -353,7 +353,7 @@ t.test('has auth for scope configured registry', async t => {
     return t.match(body, { name: '@npm/test-package' })
   }).reply(200, {})
   await npm.exec('publish', [])
-  t.matchSnapshot(joinedOutput(), 'new package version')
+  t.matchSnapshot(joinedOutput, 'new package version')
 })
 
 t.test('workspaces', t => {
@@ -420,7 +420,7 @@ t.test('workspaces', t => {
         return t.match(body, { name: 'workspace-n' })
       }).reply(200, {})
     await npm.exec('publish', [])
-    t.matchSnapshot(joinedOutput(), 'all public workspaces')
+    t.matchSnapshot(joinedOutput, 'all public workspaces')
     t.matchSnapshot(logs.warn, 'warns about skipped private workspace')
   })
 
@@ -452,7 +452,7 @@ t.test('workspaces', t => {
         return t.match(body, { name: 'workspace-n' })
       }).reply(200, {})
     await npm.exec('publish', [])
-    t.matchSnapshot(joinedOutput(), 'all public workspaces')
+    t.matchSnapshot(joinedOutput, 'all public workspaces')
     t.matchSnapshot(logs.warn, 'warns about skipped private workspace in color')
   })
 
@@ -477,7 +477,7 @@ t.test('workspaces', t => {
         return t.match(body, { name: 'workspace-a' })
       }).reply(200, {})
     await npm.exec('publish', [])
-    t.matchSnapshot(joinedOutput(), 'single workspace')
+    t.matchSnapshot(joinedOutput, 'single workspace')
   })
 
   t.test('one workspace - failure', async t => {
@@ -548,7 +548,7 @@ t.test('workspaces', t => {
         return t.match(body, { name: 'workspace-n' })
       }).reply(200, {})
     await npm.exec('publish', [])
-    t.matchSnapshot(joinedOutput(), 'all workspaces in json')
+    t.matchSnapshot(joinedOutput, 'all workspaces in json')
   })
   t.end()
 })
@@ -581,7 +581,7 @@ t.test('ignore-scripts', async t => {
   })
   registry.nock.put(`/${pkg}`).reply(200, {})
   await npm.exec('publish', [])
-  t.matchSnapshot(joinedOutput(), 'new package version')
+  t.matchSnapshot(joinedOutput, 'new package version')
   t.resolveMatch(
     fs.exists(path.join(prefix, 'scripts-prepublishonly')),
     false,
@@ -623,7 +623,7 @@ t.test('_auth config default registry', async t => {
   })
   registry.nock.put(`/${pkg}`).reply(200, {})
   await npm.exec('publish', [])
-  t.matchSnapshot(joinedOutput(), 'new package version')
+  t.matchSnapshot(joinedOutput, 'new package version')
 })
 
 t.test('bare _auth and registry config', async t => {
@@ -650,7 +650,7 @@ t.test('bare _auth and registry config', async t => {
   })
   registry.nock.put(`/${spec.escapedName}`).reply(200, {})
   await npm.exec('publish', [])
-  t.matchSnapshot(joinedOutput(), 'new package version')
+  t.matchSnapshot(joinedOutput, 'new package version')
 })
 
 t.test('bare _auth config scoped registry', async t => {
@@ -699,5 +699,5 @@ t.test('scoped _auth config scoped registry', async t => {
   })
   registry.nock.put(`/${spec.escapedName}`).reply(200, {})
   await npm.exec('publish', [])
-  t.matchSnapshot(joinedOutput(), 'new package version')
+  t.matchSnapshot(joinedOutput, 'new package version')
 })

@@ -11,7 +11,9 @@ const RealMockNpm = (t, otherMocks = {}) => {
     ...mockLogs(otherMocks),
     outputs: [],
     outputErrors: [],
-    joinedOutput: () => mock.outputs.map(o => o.join(' ')).join('\n'),
+    get joinedOutput () {
+      return mock.outputs.map(o => o.join(' ')).join('\n')
+    },
   }
 
   const Npm = t.mock('../../lib/npm.js', {

@@ -86,7 +86,7 @@ t.test('normal audit', async t => {
   await npm.exec('audit', [])
   t.ok(process.exitCode, 'would have exited uncleanly')
   process.exitCode = 0
-  t.matchSnapshot(joinedOutput())
+  t.matchSnapshot(joinedOutput)
 })
 
 t.test('fallback audit ', async t => {
@@ -135,7 +135,7 @@ t.test('fallback audit ', async t => {
   await npm.exec('audit', [])
   t.ok(process.exitCode, 'would have exited uncleanly')
   process.exitCode = 0
-  t.matchSnapshot(joinedOutput())
+  t.matchSnapshot(joinedOutput)
 })
 
 t.test('json audit', async t => {
@@ -165,7 +165,7 @@ t.test('json audit', async t => {
   await npm.exec('audit', [])
   t.ok(process.exitCode, 'would have exited uncleanly')
   process.exitCode = 0
-  t.matchSnapshot(joinedOutput())
+  t.matchSnapshot(joinedOutput)
 })
 
 t.test('audit fix - bulk endpoint', async t => {
@@ -202,7 +202,7 @@ t.test('audit fix - bulk endpoint', async t => {
       'test-dep-a': [],
     })
   await npm.exec('audit', ['fix'])
-  t.matchSnapshot(joinedOutput())
+  t.matchSnapshot(joinedOutput)
   const pkg = fs.readFileSync(path.join(npm.prefix, 'package-lock.json'), 'utf8')
   t.matchSnapshot(pkg, 'lockfile has test-dep-a@1.0.1')
   t.ok(

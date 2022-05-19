@@ -29,7 +29,7 @@ t.test('no args --force success', async t => {
   await registry.package({ manifest, query: { write: true } })
   registry.nock.delete(`/${pkg}/-rev/${manifest._rev}`).reply(201)
   await npm.exec('unpublish', [])
-  t.equal(joinedOutput(), '- test-package@1.0.0')
+  t.equal(joinedOutput, '- test-package@1.0.0')
 })
 
 t.test('no args --force missing package.json', async t => {
@@ -106,7 +106,7 @@ t.test('unpublish <pkg>@version not the last version', async t => {
     .intercept(`/${pkg}/-/${pkg}-1.0.1.tgz/-rev/${manifest._rev}`, 'DELETE').reply(201)
 
   await npm.exec('unpublish', ['test-package@1.0.1'])
-  t.equal(joinedOutput(), '- test-package@1.0.1')
+  t.equal(joinedOutput, '- test-package@1.0.1')
 })
 
 t.test('unpublish <pkg>@version last version', async t => {
@@ -151,7 +151,7 @@ t.test('no version found in package.json', async t => {
   registry.nock.delete(`/${pkg}/-rev/${manifest._rev}`).reply(201)
 
   await npm.exec('unpublish', [])
-  t.equal(joinedOutput(), '- test-package')
+  t.equal(joinedOutput, '- test-package')
 })
 
 t.test('unpublish <pkg> --force no version set', async t => {
@@ -171,7 +171,7 @@ t.test('unpublish <pkg> --force no version set', async t => {
   registry.nock.delete(`/${pkg}/-rev/${manifest._rev}`).reply(201)
 
   await npm.exec('unpublish', ['test-package'])
-  t.equal(joinedOutput(), '- test-package')
+  t.equal(joinedOutput, '- test-package')
 })
 
 t.test('silent', async t => {
@@ -199,7 +199,7 @@ t.test('silent', async t => {
     .delete(`/${pkg}/-/${pkg}-1.0.1.tgz/-rev/${manifest._rev}`).reply(201)
 
   await npm.exec('unpublish', ['test-package@1.0.1'])
-  t.equal(joinedOutput(), '')
+  t.equal(joinedOutput, '')
 })
 
 t.test('workspaces', async t => {
@@ -269,7 +269,7 @@ t.test('workspaces', async t => {
       .delete(`/workspace-n/-rev/${manifestN._rev}`).reply(201)
 
     await npm.exec('unpublish', [])
-    t.equal(joinedOutput(), '- workspace-a\n- workspace-b\n- workspace-n')
+    t.equal(joinedOutput, '- workspace-a\n- workspace-b\n- workspace-n')
   })
 
   t.test('one workspace --force', async t => {
@@ -291,7 +291,7 @@ t.test('workspaces', async t => {
     registry.nock.delete(`/workspace-a/-rev/${manifestA._rev}`).reply(201)
 
     await npm.exec('unpublish', [])
-    t.equal(joinedOutput(), '- workspace-a')
+    t.equal(joinedOutput, '- workspace-a')
   })
 })
 
@@ -314,7 +314,7 @@ t.test('dryRun with spec', async t => {
   await registry.package({ manifest, query: { write: true } })
 
   await npm.exec('unpublish', ['test-package@1.0.1'])
-  t.equal(joinedOutput(), '- test-package@1.0.1')
+  t.equal(joinedOutput, '- test-package@1.0.1')
 })
 
 t.test('dryRun with no args', async t => {
@@ -333,7 +333,7 @@ t.test('dryRun with no args', async t => {
   })
 
   await npm.exec('unpublish', [])
-  t.equal(joinedOutput(), '- test-package@1.0.0')
+  t.equal(joinedOutput, '- test-package@1.0.0')
 })
 
 t.test('publishConfig no spec', async t => {
@@ -363,7 +363,7 @@ t.test('publishConfig no spec', async t => {
   await registry.package({ manifest, query: { write: true } })
   registry.nock.delete(`/${pkg}/-rev/${manifest._rev}`).reply(201)
   await npm.exec('unpublish', [])
-  t.equal(joinedOutput(), '- test-package@1.0.0')
+  t.equal(joinedOutput, '- test-package@1.0.0')
 })
 
 t.test('publishConfig with spec', async t => {
@@ -393,7 +393,7 @@ t.test('publishConfig with spec', async t => {
   await registry.package({ manifest, query: { write: true }, times: 2 })
   registry.nock.delete(`/${pkg}/-rev/${manifest._rev}`).reply(201)
   await npm.exec('unpublish', ['test-package'])
-  t.equal(joinedOutput(), '- test-package')
+  t.equal(joinedOutput, '- test-package')
 })
 
 t.test('completion', async t => {

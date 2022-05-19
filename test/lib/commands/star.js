@@ -32,7 +32,7 @@ t.test('first person to star a package unicode:false', async t => {
 
   await npm.exec('star', [pkgName])
   t.equal(
-    joinedOutput(),
+    joinedOutput,
     '(*) @npmcli/test-package',
     'should output starred package msg'
   )
@@ -54,7 +54,7 @@ t.test('second person to star a package unicode:true', async t => {
 
   await npm.exec('star', [pkgName])
   t.equal(
-    joinedOutput(),
+    joinedOutput,
     '★  @npmcli/test-package',
     'should output starred package msg'
   )

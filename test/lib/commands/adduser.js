@@ -24,7 +24,6 @@ t.test('simple login', async t => {
     'process.stdout': new stream.PassThrough(), // to quiet readline
   }, { replace: true })
   const { npm, home } = await loadMockNpm(t, {
-    globals: {
     homeDir: {
       // These all get cleaned up by config.setCredentialsByURI
       '.npmrc': [

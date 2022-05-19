@@ -8,7 +8,7 @@ t.test('should retrieve values from config', async t => {
   npm.config.set(name, value)
   await npm.exec('get', [name])
   t.equal(
-    joinedOutput(),
+    joinedOutput,
     value,
     'outputs config item'
   )
