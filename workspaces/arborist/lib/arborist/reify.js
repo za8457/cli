@@ -376,7 +376,6 @@ module.exports = cls => class Reifier extends cls {
         const binNames = dep.package.bin && Object.keys(dep.package.bin) || []
 
         const toKey = getKey(dep)
-        const toLocation = dep.localLocation
         const target = t.fsChildren.find(c => c.location === dep.localLocation)
         // TODO: we should no-op is an edge has already been created with the same fromKey and toKey
 
@@ -510,7 +509,6 @@ module.exports = cls => class Reifier extends cls {
         return
       }
       memo.add(key)
-      const fromLocation = node.localLocation
       const from = node.isProjectRoot ? t : t.fsChildren.find(c => c.location === node.localLocation)
       const nmFolder = join(node.localLocation, 'node_modules')
 
@@ -520,7 +518,6 @@ module.exports = cls => class Reifier extends cls {
         const binNames = dep.package.bin && Object.keys(dep.package.bin) || []
 
         const toKey = getKey(dep)
-        const toLocation = dep.localLocation
         const target = t.fsChildren.find(c => c.location === dep.localLocation)
         // TODO: we should no-op is an edge has already been created with the same fromKey and toKey
 

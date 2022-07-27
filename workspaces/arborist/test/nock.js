@@ -30,16 +30,16 @@ class StreamToBuffer extends Stream.Writable {
 function packPackageToStream (manifest, reg) {
   const {
     name,
-    version
+    version,
   } = manifest
   const { shrinkwrap, bundledDeps, ...rest } = manifest
 
   const pack = tar.pack()
   const manifestString = JSON.stringify({
-    ...rest
+    ...rest,
   })
   const index = `console.log('Hello from ${name}@${version}!')`
-  const unscopedName = name.replace(/^@[^\/]*\//,'')
+  const unscopedName = name.replace(/^@[^/]*\//, '')
   pack.entry({ name: unscopedName, type: 'directory' })
   pack.entry({ name: `${unscopedName}/package.json` }, manifestString)
   pack.entry({ name: `${unscopedName}/index.js` }, index)
@@ -53,14 +53,13 @@ function packPackageToStream (manifest, reg) {
       pack.entry({ name: `${unscopedName}/node_modules/${d.name}`, type: 'directory' })
       pack.entry({ name: `${unscopedName}/node_modules/${d.name}/package.json` }, JSON.stringify(d))
       pack.entry({ name: `${unscopedName}/node_modules/${d.name}/index.js` }, `console.log('Hello from ${d.name}@${d.version}!')`
-)
+      )
     })
   }
 
   pack.finalize()
   return pack
 }
-
 
 /**
  * Pack a package for publish.
@@ -85,55 +84,54 @@ async function packPackage (manifest, reg) {
 async function publishPackage (registry, manifest, packuments) {
   const {
     name,
-    version
+    version,
   } = manifest
   const { shrinkwrap, bundledDeps, ...rest } = manifest
 
   if (packuments.has(name)) {
     packuments.get(name).versions[version] = {
-        bin: "./bin.js",
+      bin: './bin.js',
       ...rest,
       dist: {
-        tarball: `${registry}/${name.replace(/\//g,'-')}/${version}.tar`
-      }
+        tarball: `${registry}/${name.replace(/\//g, '-')}/${version}.tar`,
+      },
     }
   } else {
     packuments.set(name, {
       name,
       'dist-tags': {
-        latest: version
+        latest: version,
       },
       versions: {
         [version]: {
           ...rest,
-          bin: "./bin.js",
+          bin: './bin.js',
           dist: {
-            tarball: `${registry}/${name.replace(/\//g,'-')}/${version}.tar`
-          }
-        }
-      }
+            tarball: `${registry}/${name.replace(/\//g, '-')}/${version}.tar`,
+          },
+        },
+      },
     })
   }
-
 
   const tarball = await packPackage(manifest, registry)
 
   nock(registry)
     .persist()
-    .get(`/${name.replace(/\//g,'-')}/${version}.tar`)
+    .get(`/${name.replace(/\//g, '-')}/${version}.tar`)
     .reply(200, tarball)
 }
 
 /**
  * Given an object decribing a dependency graph, this funcion will materialize
  * this dependency graph on disk and in a registry.
- * 
+ *
  * The input has the following shape:
  * {
  *   registry: [ package1, package2,... ],
  *   root: { name: <name>, version: <version>, dependencies: <dependencies> }
  * }
- * package# represent a registry package and is of the following shape: 
+ * package# represent a registry package and is of the following shape:
  * { name: <name>, version: <version>, dependencies?: <dependencies> }
  *
  * The return value is of the form { dir, registry } where:
@@ -145,53 +143,52 @@ async function publishPackage (registry, manifest, packuments) {
  * - shinkwrap
  * - bundled dependencies
  *
- * The API of this function is not stable and is likely to evolve as we add more features.  
+ * The API of this function is not stable and is likely to evolve as we add more features.
  */
 async function getRepo (graph) {
   // Generate a new random registry every time to prevent interference between tests
   const registry = `https://${Math.random().toString(36).substring(2)}.test`
-  
+
   const packuments = new Map()
   // Publish all the registery packages
-  await Promise.all(graph.registry.map(o => 
+  await Promise.all(graph.registry.map(o =>
     publishPackage(registry, o, packuments)))
 
   packuments.forEach((packument, name) => {
     nock(registry)
       .persist()
-      .get(`/${name.replace(/\//g,'%2f')}`)
+      .get(`/${name.replace(/\//g, '%2f')}`)
       .reply(200, packument)
   })
-
 
   // Generate the root of the graph on disk
   const root = graph.root
   const workspaces = graph.workspaces || []
   const repo = {
     'package.json': JSON.stringify({
-      workspaces: workspaces.length !== 0 ? ["packages/*"] : undefined,
-      ...root
+      workspaces: workspaces.length !== 0 ? ['packages/*'] : undefined,
+      ...root,
     }),
-    'packages': {}
+    packages: {},
   }
   workspaces.forEach(wp => {
-    repo.packages[wp.name] = { 
+    repo.packages[wp.name] = {
       'package.json': JSON.stringify(wp),
       'bin.js': '#!/usr/bin/env node\nconsole.log("bin")',
-      'index.js': `console.log('Hello from workspace ${wp.name}')`
+      'index.js': `console.log('Hello from workspace ${wp.name}')`,
     }
   })
   const dir = testdir(repo)
   return { dir, registry }
 }
 
-function testdir(structure) {
-  const dir = fs.mkdtempSync(`${path.resolve(os.tmpdir())}/test-`)
+function testdir (structure) {
+  const dir = fs.mkdtempSync(`${fs.realpathSync(os.tmpdir())}/test-`)
   createDir(dir, structure)
   return dir
 }
 
-function createDir(dir, structure) {
+function createDir (dir, structure) {
   Object.entries(structure).forEach(([key, value]) => {
     if (typeof value === 'object') {
       const newDir = path.join(dir, key)

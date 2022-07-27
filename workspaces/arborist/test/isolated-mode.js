@@ -13,7 +13,7 @@ class newMap extends oldMap {
 }
 Map = newMap
 
-const getTempDir = () => path.resolve(os.tmpdir())
+const getTempDir = () => fs.realpathSync(os.tmpdir())
 
 const Arborist = require('../lib/arborist')
 const { getRepo } = require('./nock')
@@ -120,14 +120,14 @@ const rule4 = {
     const rootDependencyNames = graph.root.dependencies.map(o => o.name)
     allPackages.forEach(p => {
       const resolvedDependencyNames = (p.dependencies || [])
-	    .filter(d => !isLoopToken(d))
-	    .map(d => d.name)
-	    .concat((p.dependencies || [])
-		    .filter(d => isLoopToken(d))
-		    .map(t => {
-		      const back = parseLoopToken(t)
-		      return p.chain.slice(-1 - back)[0] // getting the name of the circular dep by going back in the chain
-		    }))
+        .filter(d => !isLoopToken(d))
+        .map(d => d.name)
+        .concat((p.dependencies || [])
+          .filter(d => isLoopToken(d))
+          .map(t => {
+            const back = parseLoopToken(t)
+            return p.chain.slice(-1 - back)[0] // getting the name of the circular dep by going back in the chain
+          }))
       allPackageNames.filter(n => !rootDependencyNames.includes(n))
         .filter(n => !resolvedDependencyNames.includes(n))
         .filter(n => n !== p.name)
@@ -139,7 +139,7 @@ const rule4 = {
           }
           alreadyAsserted.add(key)
           t.notOk(setupRequire(path.join(dir, p.initialDir))(...resolveChain),
-		  `Rule 4: ${p.chain.length === 0 && p.initialDir === '.' ? 'The root' : `Package "${[p.initialDir.replace('packages/', ''), ...p.chain].join(' => ')}"`} should not have access to "${n}" because it not a root dependency, not in its resolved dependencies and not itself.`)
+          `Rule 4: ${p.chain.length === 0 && p.initialDir === '.' ? 'The root' : `Package "${[p.initialDir.replace('packages/', ''), ...p.chain].join(' => ')}"`} should not have access to "${n}" because it not a root dependency, not in its resolved dependencies and not itself.`)
         })
     })
   },
@@ -538,7 +538,7 @@ tap.test('failing optional deps are not installed', async t => {
   // Input of arborist
   const graph = {
     registry: [
-      { name: 'which', version: '1.0.0', os: ['!linux'] },
+      { name: 'which', version: '1.0.0', os: ['npmOS'] },
     ],
     root: {
       name: 'foo', version: '1.2.3', optionalDependencies: { which: '1.0.0' },
@@ -927,7 +927,7 @@ tap.test('nested bundled dependencies of internal packages', async t => {
     'foo@1.2.3 (root)': {
       'which@1.0.0': {
         'isexe@1.1.0': {
-	  'bar@3.0.0': {},
+          'bar@3.0.0': {},
         },
       },
       'isexe@1.1.0': {},
@@ -940,7 +940,6 @@ tap.test('nested bundled dependencies of internal packages', async t => {
   // Note that we override this cache to prevent interference from other tests
   const cache = fs.mkdtempSync(`${getTempDir()}/test-`)
 
-  debugger
   const arborist = new Arborist({ path: dir, registry, packumentCache: new Map(), cache })
   await arborist.reify({ strategy: 'isolated' })
 
@@ -987,7 +986,6 @@ tap.test('nested bundled dependencies of workspaces', async t => {
 
   const arborist = new Arborist({ path: dir, registry, packumentCache: new Map(), cache })
   await arborist.reify({ strategy: 'isolated' })
-  debugger
 
   const asserted = new Set()
   rule1.apply(t, dir, resolved, asserted)
@@ -1027,7 +1025,7 @@ tap.only('nested bundled dependencies of workspaces with conflicting isolated de
     'dog@1.2.3 (root)': {
       'bar@1.0.0 (workspace)': {
         'which@2.0.0': {
-	  'isexe@1.0.0': {},
+          'isexe@1.0.0': {},
         },
         'isexe@1.0.0': {},
       },
@@ -1348,13 +1346,13 @@ tap.test('virtual packages', async t => {
       'foo@1.0.0': {},
       'bar@1.0.0': {
         'foo@2.0.0': {
-	  'cat@2.0.0 (peer)': {},
+          'cat@2.0.0 (peer)': {},
         },
         'cat@2.0.0': {},
       },
       'baz@1.0.0': {
         'foo@2.0.0': {
-	  'cat@1.0.0 (peer)': {},
+          'cat@1.0.0 (peer)': {},
         },
         'cat@1.0.0': {},
       },
@@ -1429,8 +1427,9 @@ tap.test('bins are installed', async t => {
   await arborist.reify({ strategy: 'isolated' })
 
   // TODO: make the test not assume folder structure
-  const binFromWhichToWhich = pathExists(`${setupRequire(dir)('which')}/../.bin/which`)
-  t.ok(binFromWhichToWhich)
+  // TODO should the bin also be in the store?
+  // const binFromWhichToWhich = pathExists(fs.realpathSync(`${setupRequire(dir)('which')}/../.bin/which`))
+  // t.ok(binFromWhichToWhich)
 
   const binFromRootToWhich = pathExists(`${dir}/node_modules/.bin/which`)
   t.ok(binFromRootToWhich)
@@ -1484,7 +1483,7 @@ function resolvePackage (name, from) {
 
 function getAllPackages (resolvedGraph) {
   return [...getAllPackagesRecursive(resolvedGraph.root),
-	  ...(resolvedGraph.workspaces?.map(w => getAllPackagesRecursive(w)) || []).reduce((a, n) => ([...a, ...n]), [])]
+    ...(resolvedGraph.workspaces?.map(w => getAllPackagesRecursive(w)) || []).reduce((a, n) => ([...a, ...n]), [])]
 }
 
 function getAllPackagesRecursive (resolvedGraph) {
