@@ -45,7 +45,7 @@ const printableEdge = (edge) => {
 
 class Edge {
   constructor (options) {
-    const { type, name, spec, accept, from, overrides } = options
+    const { type, name, spec, accept, from } = options
 
     if (typeof spec !== 'string') {
       throw new TypeError('must provide string spec')
@@ -56,10 +56,6 @@ class Edge {
     }
 
     this[_spec] = spec
-
-    if (overrides !== undefined) {
-      this.overrides = overrides
-    }
 
     if (accept !== undefined) {
       if (typeof accept !== 'string') {
