@@ -5,6 +5,10 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
+exports[`test/lib/commands/init.js TAP no args, missing package > should print warn info 1`] = `
+Array []
+`
+
 exports[`test/lib/commands/init.js TAP npm init workspces with root > does not print helper info 1`] = `
 Array []
 `

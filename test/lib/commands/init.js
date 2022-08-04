@@ -472,12 +472,41 @@ t.test('workspaces', t => {
 
     npm.localPrefix = t.testdir({})
 
-    const Init = require('../../../lib/commands/init.js')
+    const Init = t.mock('../../../lib/commands/init.js', {
+      ...mocks,
+      'proc-log': {
+        ...mocks['proc-log'],
+        warn: (msg) => {
+          t.equal(msg, 'Missing package.json. Try with `--include-workspace-root`.')
+        },
+      },
+    })
     const init = new Init(npm)
 
     await t.rejects(
       init.execWorkspaces([], ['a']),
       { code: 'ENOENT' },
+      'should exit with missing package.json file error'
+    )
+  })
+
+  t.test('other errors pass through when setting workspace', async t => {
+    // init-package-json prints directly to console.log
+    // this avoids poluting test output with those logs
+    console.log = noop
+
+    npm.localPrefix = t.testdir({
+      'package.json': {
+        name: 'ape-ecs',
+        version: '1.0.0',
+      },
+    })
+    const Init = require('../../../lib/commands/init.js')
+    const init = new Init(npm)
+
+    await t.rejects(
+      init.execWorkspaces([], ['a@kl@ijasdf']),
+      { code: 'EISDIR' },
       'should exit with missing package.json file error'
     )
   })
@@ -539,4 +568,34 @@ t.test('npm init workspces with root', async t => {
   t.equal(pkg.version, '1.0.0')
   t.equal(pkg.license, 'ISC')
   t.matchSnapshot(npm._mockOutputs, 'does not print helper info')
+})
+
+t.test('no args, missing package', async t => {
+  t.teardown(() => {
+    npm._mockOutputs.length = 0
+  })
+
+  const Init = t.mock('../../../lib/commands/init.js', {
+    ...mocks,
+    'proc-log': {
+      ...mocks['proc-log'],
+      warn: (msg) => {
+        t.equal(msg, 'Missing package.json. Try with `--include-workspace-root`.')
+      },
+    },
+  })
+  const init = new Init(npm)
+  // init-package-json prints directly to console.log
+  // this avoids poluting test output with those logs
+  console.log = noop
+
+  npm.localPrefix = t.testdir({})
+
+  await t.rejects(
+    init.execWorkspaces([], ['a']),
+    { code: 'ENOENT' },
+    'should exit with missing package.json file error'
+  )
+
+  t.matchSnapshot(npm._mockOutputs, 'should print warn info')
 })
