@@ -1169,7 +1169,8 @@ module.exports = cls => class Reifier extends cls {
     // and no 'bundled: true' setting.
     // Do the best with what we have, or else remove it from the tree
     // entirely, since we can't possibly reify it.
-    const res = node.resolved ? `${node.name}@${this[_registryResolved](node.resolved)}`
+    const res = node.resolved
+      ? `${node.name}@${this[_registryResolved](node.resolved)}`
       : node.packageName && node.version
         ? `${node.packageName}@${node.version}`
         : null
@@ -1249,13 +1250,21 @@ module.exports = cls => class Reifier extends cls {
     // ${REGISTRY} or something.  This has to be threaded through the
     // Shrinkwrap and Node classes carefully, so for now, just treat
     // the default reg as the magical animal that it has been.
-    const resolvedURL = new URL(resolved)
-    if ((this.options.replaceRegistryHost === resolvedURL.hostname)
-      || this.options.replaceRegistryHost === 'always') {
-      // this.registry always has a trailing slash
-      resolved = `${this.registry.slice(0, -1)}${resolvedURL.pathname}${resolvedURL.searchParams}`
+    try {
+      const resolvedURL = new URL(resolved)
+      if ((this.options.replaceRegistryHost === resolvedURL.hostname)
+        || this.options.replaceRegistryHost === 'always') {
+        // this.registry always has a trailing slash
+        resolved = `${this.registry.slice(0, -1)}${resolvedURL.pathname}${resolvedURL.searchParams}`
+      }
+    } catch (err) {
+      // could be a path or other non-url
+      if (!err.code === 'ERR_INVALID_URL') {
+        throw err
+      }
+    } finally {
+      return resolved
     }
-    return resolved
   }
 
   // bundles are *sort of* like shrinkwraps, in that the branch is defined
