@@ -1466,6 +1466,14 @@ operations, if \`process.stderr\` is a TTY.
 
 Set to \`false\` to suppress the progress bar.
 
+#### \`provenance\`
+
+* Default: null
+* Type: null, Boolean, or Path
+
+Indicates that a provenance statement should be generated (true) or provides
+a path to an existing provenance statement.
+
 #### \`proxy\`
 
 * Default: null
@@ -2218,6 +2226,7 @@ Array [
   "preid",
   "production",
   "progress",
+  "provenance",
   "proxy",
   "read-only",
   "rebuild-bundle",
@@ -2352,6 +2361,7 @@ Array [
   "preid",
   "production",
   "progress",
+  "provenance",
   "proxy",
   "read-only",
   "rebuild-bundle",
@@ -3704,6 +3714,7 @@ Options:
 [--tag <tag>] [--access <restricted|public>] [--dry-run] [--otp <otp>]
 [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
 [-ws|--workspaces] [--include-workspace-root]
+[--no-provenance|--provenance | <provenance-path>]
 
 Run "npm help publish" for more info
 
@@ -3718,6 +3729,7 @@ npm publish <package-spec>
 #### \`workspace\`
 #### \`workspaces\`
 #### \`include-workspace-root\`
+#### \`provenance\`
 `
 
 exports[`test/lib/docs.js TAP usage query > must match snapshot 1`] = `
