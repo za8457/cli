@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@npmcli/eslint-config": "^4.0.0",
+    "@npmcli/mock-registry": "^1.0.0",
     "@npmcli/template-oss": "4.10.0",
     "libnpmpack": "^5.0.5",
     "lodash.clonedeep": "^4.5.0",
@@ -39,10 +40,12 @@
   "bugs": "https://github.com/npm/cli/issues",
   "homepage": "https://npmjs.com/package/libnpmpublish",
   "dependencies": {
+    "ci-info": "^3.6.1",
     "normalize-package-data": "^5.0.0",
     "npm-package-arg": "^10.0.0",
     "npm-registry-fetch": "^14.0.2",
     "semver": "^7.3.7",
+    "sigstore": "^0.1.1",
     "ssri": "^10.0.0"
   },
   "engines": {
