@@ -657,7 +657,7 @@ t.test('other error code', async t => {
   )
 })
 
-t.test('basic publish w/ provenance', async t => {
+t.test('publish existing package with provenance in gha', async t => {
   const oidcURL = 'https://mock.oidc'
   const requestToken = 'decafbad'
   // Set-up GHA environment variables
@@ -808,6 +808,46 @@ t.test('basic publish w/ provenance', async t => {
     rekorBaseURL: rekorURL,
   })
   t.ok(ret, 'publish succeeded')
+})
+
+t.test('publish new/private package with provenance in gha - no access', async t => {
+  const oidcURL = 'https://mock.oidc'
+  const requestToken = 'decafbad'
+  mockGlobals(t, {
+    'process.env': {
+      CI: true,
+      GITHUB_ACTIONS: true,
+      ACTIONS_ID_TOKEN_REQUEST_URL: oidcURL,
+      ACTIONS_ID_TOKEN_REQUEST_TOKEN: requestToken,
+    },
+  })
+  const { publish } = t.mock('..', { 'ci-info': t.mock('ci-info') })
+  const registry = new MockRegistry({
+    tap: t,
+    registry: opts.registry,
+    authorization: token,
+    strict: true,
+  })
+  const manifest = {
+    name: '@npmcli/libnpmpublish-test',
+    version: '1.0.0',
+    description: 'test libnpmpublish package',
+  }
+  const spec = npa(manifest.name)
+  registry.getVisibility({ spec, visibility: { public: false } })
+
+  const testDir = t.testdir({
+    'package.json': JSON.stringify(manifest, null, 2),
+    'index.js': 'hello',
+  })
+  await t.rejects(
+    publish(manifest, Buffer.from(''), {
+      ...opts,
+      access: null,
+      provenance: true,
+    }),
+    { code: 'EUSAGE' }
+  )
 })
 
 // t.test('user-supplied provenance', t => {

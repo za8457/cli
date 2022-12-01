@@ -143,7 +143,7 @@ const buildMetadata = async (registry, manifest, tarballData, spec, opts) => {
       // currently the only supported build environment
       if (ciInfo.name === 'GitHub Actions' && process.env.ACTIONS_ID_TOKEN_REQUEST_URL) {
         const visibility =
-          await npmFetch(`${registry}/-/package/${spec.escapedName}/visibility`, opts)
+          await npmFetch.json(`${registry}/-/package/${spec.escapedName}/visibility`, opts)
         if (!visibility.public && opts.provenance === true && opts.access !== 'public') {
           throw Object.assign(
             /* eslint-disable-next-line max-len */
@@ -156,8 +156,12 @@ const buildMetadata = async (registry, manifest, tarballData, spec, opts) => {
           digest: { sha512: integrity.sha512[0].hexDigest() },
         }],
         }, opts)
+      } else {
+        throw Object.assign(
+          new Error('Automatic provenance generation not supported outside of GitHub Actions'),
+          { code: 'EUSAGE' }
+        )
       }
-      // TODO { else throw }
     } else {
       // TODO: Handle case where an existing bundle was supplied. Read bundle
       // from disk and verify
