@@ -156,6 +156,7 @@ const buildMetadata = async (registry, manifest, tarballData, spec, opts) => {
           digest: { sha512: integrity.sha512[0].hexDigest() },
         }],
         }, opts)
+        console.log(provenanceBundle)
       } else {
         throw Object.assign(
           new Error('Automatic provenance generation not supported outside of GitHub Actions'),
