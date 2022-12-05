@@ -8,7 +8,7 @@ const BUILDER_ID_PREFIX = 'https://github.com/npm/cli'
 const BUILD_TYPE_PREFIX = 'https://github.com/npm/cli/gha'
 const BUILD_TYPE_VERSION = 'v0'
 
-const generateProvenance = async (subject, opts) => {
+const generateProvenance = async ({ subject }, opts) => {
   const { env } = process
   const payload = {
     _type: INTOTO_STATEMENT_TYPE,
