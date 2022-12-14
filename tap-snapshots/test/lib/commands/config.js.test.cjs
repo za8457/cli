@@ -48,6 +48,7 @@ exports[`test/lib/commands/config.js TAP config list --json > output matches sna
   "dry-run": false,
   "editor": "{EDITOR}",
   "engine-strict": false,
+  "expect-entries": null,
   "fetch-retries": 2,
   "fetch-retry-factor": 10,
   "fetch-retry-maxtimeout": 60000,
@@ -201,6 +202,7 @@ diff-unified = 3
 dry-run = false 
 editor = "{EDITOR}" 
 engine-strict = false 
+expect-entries = null 
 fetch-retries = 2 
 fetch-retry-factor = 10 
 fetch-retry-maxtimeout = 60000 

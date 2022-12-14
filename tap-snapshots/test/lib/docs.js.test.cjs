@@ -891,6 +891,15 @@ Node.js version.
 
 This can be overridden by setting the \`--force\` flag.
 
+#### \`expect-entries\`
+
+* Default: null
+* Type: null, Boolean, or Number
+
+Tells npm how many entries to expect from the command. Can be either true
+(expect some entries), false (expect no entries), or a number to match
+exactly.
+
 #### \`fetch-retries\`
 
 * Default: 2
@@ -2150,6 +2159,7 @@ Array [
   "dry-run",
   "editor",
   "engine-strict",
+  "expect-entries",
   "fetch-retries",
   "fetch-retry-factor",
   "fetch-retry-maxtimeout",
@@ -2389,6 +2399,7 @@ Array [
 
 exports[`test/lib/docs.js TAP config > keys that are not flattened 1`] = `
 Array [
+  "expect-entries",
   "init-author-email",
   "init-author-name",
   "init-author-url",
@@ -3730,6 +3741,7 @@ Options:
 [-g|--global]
 [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
 [-ws|--workspaces] [--include-workspace-root]
+[--no-expect-entries|--expect-entries <expect-entries>]
 
 Run "npm help query" for more info
 
@@ -3741,6 +3753,7 @@ npm query <selector>
 #### \`workspace\`
 #### \`workspaces\`
 #### \`include-workspace-root\`
+#### \`expect-entries\`
 `
 
 exports[`test/lib/docs.js TAP usage rebuild > must match snapshot 1`] = `
