@@ -307,7 +307,7 @@ class MockRegistry {
   }
 
   // full unpublish of an entire package
-  async unpublish( { manifest }) {
+  async unpublish ({ manifest }) {
     let nock = this.nock
     const spec = npa(manifest.name)
     nock = nock.delete(this.fullPath(`/${spec.escapedName}/-rev/${manifest._rev}`)).reply(201)
@@ -367,6 +367,7 @@ class MockRegistry {
         description: 'test package mock manifest',
         dependencies: {},
         dist: {
+          // eslint-disable-next-line max-len
           tarball: `${this.origin}${this.fullPath(`/${name}/-/${unscoped}-${packument.version}.tgz`)}`,
         },
         maintainers: [],
@@ -395,7 +396,6 @@ class MockRegistry {
       ...packument,
     }
   }
-
 }
 
 module.exports = MockRegistry
