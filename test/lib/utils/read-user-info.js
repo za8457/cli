@@ -2,9 +2,9 @@ const t = require('tap')
 
 let readOpts = null
 let readResult = null
-const read = (opts, cb) => {
+const read = async (opts) => {
   readOpts = opts
-  return cb(null, readResult)
+  return readResult
 }
 
 const npmUserValidate = {

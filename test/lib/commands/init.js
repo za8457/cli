@@ -62,13 +62,12 @@ t.test('classic interactive npm init', async t => {
 
   const Init = t.mock('../../../lib/commands/init.js', {
     ...mocks,
-    'init-package-json': (path, initFile, config, cb) => {
+    'init-package-json': async (path) => {
       t.equal(
         path,
         resolve(npm.localPrefix),
         'should start init package.json in expected path'
       )
-      cb()
     },
   })
   const init = new Init(npm)
@@ -285,9 +284,9 @@ t.test('npm init cancel', async t => {
 
   const Init = t.mock('../../../lib/commands/init.js', {
     ...mocks,
-    'init-package-json': (dir, initFile, config, cb) => cb(
-      new Error('canceled')
-    ),
+    'init-package-json': async () => {
+      throw new Error('canceled')
+    },
     'proc-log': {
       ...mocks['proc-log'],
       warn: (title, msg) => {
@@ -307,9 +306,9 @@ t.test('npm init error', async t => {
 
   const Init = t.mock('../../../lib/commands/init.js', {
     ...mocks,
-    'init-package-json': (dir, initFile, config, cb) => cb(
-      new Error('Unknown Error')
-    ),
+    'init-package-json': async () => {
+      throw new Error('Unknown Error')
+    },
   })
   const init = new Init(npm)
 
@@ -335,9 +334,8 @@ t.test('workspaces', t => {
 
     const Init = t.mock('../../../lib/commands/init.js', {
       ...mocks,
-      'init-package-json': (dir, initFile, config, cb) => {
+      'init-package-json': async (dir) => {
         t.equal(dir, resolve(npm.localPrefix, 'a'), 'should use the ws path')
-        cb()
       },
     })
     const init = new Init(npm)
@@ -364,9 +362,9 @@ t.test('workspaces', t => {
 
     const Init = t.mock('../../../lib/commands/init.js', {
       ...mocks,
-      'init-package-json': (dir, initFile, config, cb) => {
+      'init-package-json': async (dir, initFile, config) => {
         t.equal(dir, resolve(npm.localPrefix, 'a'), 'should use the ws path')
-        return require('init-package-json')(dir, initFile, config, cb)
+        return require('init-package-json')(dir, initFile, config)
       },
     })
     const init = new Init(npm)
